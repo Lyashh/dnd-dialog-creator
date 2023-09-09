@@ -9,6 +9,8 @@ export default function NodePalette(props) {
   const nodeTypes = React.useContext(NodePaletteContext);
 
   const onDragStart = (event, nodeType) => {
+    console.log('drag start');
+    
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
   };

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useRef } from 'react';
 import ReactFlow, {
   addEdge,
   applyNodeChanges,
@@ -13,13 +13,18 @@ import ReactFlow, {
   Background,
   ReactFlowInstance,
   BackgroundVariant,
+  Controls,
 } from 'reactflow';
+
+// providers
+import { NodePaletteProvider } from './Providers';
 
 export const NodePaletteContext = React.createContext({ node_types: {} });
 import { DialogueEntryNode } from './nodes/DialogueEntry';
 import { NodePaletteTypes } from './board/types';
 
 import 'reactflow/dist/style.css';
+import { AppHeader } from './navigation/Header';
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: 'TTqwqw1' } },
@@ -28,15 +33,61 @@ const initialNodes = [
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 
 export default function App() {
+  const reactFlowWrapper = useRef(null);
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const [maxId, setMaxId] = useState(0);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+
+  const getId = (node_count) => {
+    // increment id
+    console.log('incrementing id: ' + node_count);
+    return `node_${node_count}`;
+  };
+
   // define node types
   const nodeTypes = useMemo<NodePaletteTypes>(
     () => ({
       dialogue_entry: DialogueEntryNode,
     }),
     [],
+  );
+
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      const reactFlowBounds = reactFlowWrapper!.current!.getBoundingClientRect() as any;
+      const type = event.dataTransfer.getData('application/reactflow');
+
+      // check if the dropped element is valid
+      if (typeof type === 'undefined' || !type) {
+        return;
+      }
+
+      const position = reactFlowInstance!.project({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      });
+      const id = getId(maxId);
+      const newNode = {
+        id: id,
+        type,
+        position,
+        data: { id: id },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+
+      // increment id
+      setMaxId(maxId + 1);
+    },
+    [reactFlowInstance, maxId],
   );
 
   const defaultEdgeOptions: DefaultEdgeOptions = {
@@ -56,20 +107,38 @@ export default function App() {
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <ReactFlow
-        onInit={setReactFlowInstance}
-        nodeTypes={nodeTypes}
-        nodes={nodes}
-        edges={edges}
-        defaultEdgeOptions={defaultEdgeOptions}
-        fitView
-        fitViewOptions={fitViewOptions}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-      >
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-      </ReactFlow>
+      <NodePaletteProvider value={{ node_types: nodeTypes }}>
+        <div style={{ height: '100%' }} ref={reactFlowWrapper}>
+          <div
+            style={{
+              pointerEvents: 'auto',
+              zIndex: 200,
+              position: 'absolute',
+              bottom: 15,
+              right: 15,
+              opacity: 0.8,
+            }}
+          ></div>
+          <ReactFlow
+            onInit={setReactFlowInstance}
+            nodeTypes={nodeTypes}
+            nodes={nodes}
+            edges={edges}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            defaultEdgeOptions={defaultEdgeOptions}
+            fitView
+            fitViewOptions={fitViewOptions}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+          >
+            <Controls />
+            <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+          </ReactFlow>
+          <AppHeader />
+        </div>
+      </NodePaletteProvider>
     </div>
   );
 }
