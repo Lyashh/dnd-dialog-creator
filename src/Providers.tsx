@@ -1,6 +1,7 @@
 import React from 'react';
+import { TNodePaletteTypes } from './board/nodeTypes.const';
 
-const NodePaletteContext = React.createContext({});
+const NodePaletteContext = React.createContext<{ node_types: Partial<TNodePaletteTypes> }>({ node_types: {} });
 export const NodePaletteProvider = NodePaletteContext.Provider;
 export default NodePaletteContext;
 

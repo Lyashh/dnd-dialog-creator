@@ -1,34 +1,33 @@
 import * as React from 'react';
 import { Card, Typography, List, ListItem } from '@mui/material';
+
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import NodePaletteContext from '../Providers';
 
-// drag and drop icon
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+export const NodePalette = () => {
+  const nodeTypes = React.useContext(NodePaletteContext).node_types;
 
-export default function NodePalette(props) {
-  const nodeTypes = React.useContext(NodePaletteContext);
-
-  const onDragStart = (event, nodeType) => {
-    console.log('drag start');
-    
+  const onDragStart = (event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
   };
 
-  const formatNodeType = (nodeType) => {
+  const formatNodeType = (nodeType: string) => {
     // capitalize each word and remove underscores
     return nodeType.replace(/_/g, ' ').replace(/\w\S*/g, (w) => w.replace(/^\w/, (c) => c.toUpperCase()));
   };
 
   return (
     <Card sx={{ float: 'right', width: '100%', m: 1 }}>
-      <Typography variant="h2" fontSize="md" sx={{ mb: 0.5 }}>
+      <Typography variant="h6" fontSize="md" sx={{ mb: 0.5 }}>
         Node Palette
       </Typography>
       <List>
-        {Object.keys(nodeTypes.node_types).map((nodeType) => {
+        {Object.keys(nodeTypes).map((nodeType) => {
+          console.log({ nodeType });
+
           return (
-            <ListItem className="node_palette_item" key={nodeType} onDragStart={(event) => onDragStart(event, nodeType)} draggable>
+            <ListItem key={nodeType} onDragStart={(event) => onDragStart(event, nodeType)} draggable>
               {/* <ListItemDecorator> */}
               <DragIndicatorIcon />
               {/* </ListItemDecorator> */}
@@ -39,4 +38,4 @@ export default function NodePalette(props) {
       </List>
     </Card>
   );
-}
+};

@@ -2,17 +2,19 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-export const CopyNodeIdButton = (props) => {
+type TProps = {
+  id: number;
+};
+
+export const CopyNodeIdButton = (props: TProps) => {
   // copy node id to clipboard
   const copyNodeId = () => {
-    navigator.clipboard.writeText(props.id);
+    navigator.clipboard.writeText(props.id.toString());
   };
 
   return (
-    <Button aria-label="Copy ID" variant="contained" onClick={copyNodeId} startIcon={<ContentCopyIcon />}>
-      <Typography variant="subtitle1" fontStyle="italic" fontSize="sm" className="margin-bottom-half">
-        ID: {props.id}
-      </Typography>
+    <Button aria-label="Copy ID" variant="contained" onClick={copyNodeId} sx={{ mb: 1}} startIcon={<ContentCopyIcon />}>
+      <Typography variant="body2">ID: {props.id}</Typography>
     </Button>
   );
 };

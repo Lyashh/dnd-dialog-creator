@@ -1,17 +1,20 @@
 import { Handle, Position } from 'reactflow';
 import * as React from 'react';
-import Card from '@mui/material/Card';
-import Input from '@mui/material/Input';
-// label
-import FormLabel from '@mui/material/FormLabel';
-import AddHomeIcon from '@mui/icons-material/AddHome';
+import { Card, TextField } from '@mui/material';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
 import { NodeHeader } from './utils/NodeHeader';
 
-export const DialogueEntryNode = ({ data }) => {
+type TProps = {
+  id: number;
+  npc_name: string;
+};
+
+export const DialogueEntryNode = (props: unknown) => {
+  const data = props as TProps;
   // state for npc name
   const [npcName, setNpcName] = React.useState(data.npc_name || '');
 
-  const onChange = (evt) => {
+  const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     // value
     setNpcName(evt.target.value);
     // data
@@ -20,20 +23,11 @@ export const DialogueEntryNode = ({ data }) => {
 
   return (
     <>
-      <Card>
-        <NodeHeader
-          id={data.id}
-          nodeName="Dialogue Entry"
-          nodeDecorators={
-            <>
-              <AddHomeIcon sx={{ color: '#00ff00' }} />
-            </>
-          }
-        />
-        <FormLabel htmlFor="npc_name">NPC Name:</FormLabel>
-        <Input id="npc_name" name="npc_name" placeholder="NPC Name..." onChange={onChange} value={npcName} />
+      <Card sx={{ p: 1 }}>
+        <NodeHeader id={data.id} nodeName="Dialogue Entry" nodeDecorators={<AcUnitIcon />} />
+        <TextField required sx={{ mb: 1 }} name="npc_name" label="NPC Name..." defaultValue="" onChange={onChange} value={npcName} />
       </Card>
-      <Handle type="source" position={Position.Bottom} id="flow" />
+      <Handle type="source" position={Position.Bottom} id={`flow_${data.id}`} />
     </>
   );
 };

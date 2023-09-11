@@ -1,7 +1,7 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Board } from './board/Board';
 
-const darkTheme = createTheme({
+const mainTheme = createTheme({
   palette: {
     mode: 'dark',
   },
@@ -9,7 +9,7 @@ const darkTheme = createTheme({
 
 export default function App() {
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={mainTheme}>
       <Board />;
     </ThemeProvider>
   );

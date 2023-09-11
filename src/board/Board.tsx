@@ -15,22 +15,16 @@ import ReactFlow, {
   BackgroundVariant,
   Controls,
 } from 'reactflow';
-
-// providers
-import { NodePaletteProvider } from '../Providers';
-
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Grid } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
 
 export const NodePaletteContext = React.createContext({ node_types: {} });
-import { DialogueEntryNode } from '../nodes/DialogueEntry';
-import { NodePaletteTypes } from '../board/types';
+import { NODE_TYPES, TNodePaletteTypes } from './nodeTypes.const';
 
 import 'reactflow/dist/style.css';
-import { AppHeader } from '../navigation/Header';
 import { BoardWrapper } from './BoardWrapper';
 import { config } from '../config';
+import { NodePaletteProvider } from '../Providers';
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: 'TTqwqw1' } },
@@ -40,37 +34,39 @@ const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 
 const toolbarHeight = config.theme.toolbarHeight;
 
+const boardTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
+
 export const Board = () => {
-  const reactFlowWrapper = useRef(null);
+  const reactFlowWrapper = useRef<HTMLIFrameElement>(null);
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [maxId, setMaxId] = useState(0);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
-  const getId = (node_count) => {
+  const getId = (node_count: number) => {
     // increment id
     console.log('incrementing id: ' + node_count);
     return `node_${node_count}`;
   };
 
   // define node types
-  const nodeTypes = useMemo<NodePaletteTypes>(
-    () => ({
-      dialogue_entry: DialogueEntryNode,
-    }),
-    [],
-  );
+  const nodeTypes = useMemo<TNodePaletteTypes>(() => NODE_TYPES, []);
 
-  const onDragOver = useCallback((event) => {
+  const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
   const onDrop = useCallback(
-    (event) => {
+    (event: React.DragEvent) => {
       event.preventDefault();
+      console.log({ reactFlowWrapper });
 
-      const reactFlowBounds = reactFlowWrapper!.current!.getBoundingClientRect() as any;
+      const reactFlowBounds = reactFlowWrapper!.current!.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
       // check if the dropped element is valid
@@ -116,31 +112,34 @@ export const Board = () => {
   const content = (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <div style={{ minWidth: '83vw', height: `calc(100vh - ${toolbarHeight} - 4.3vh)` }}>
-          <NodePaletteProvider value={{ node_types: nodeTypes }}>
-            <ReactFlow
-              onInit={setReactFlowInstance}
-              nodeTypes={nodeTypes}
-              nodes={nodes}
-              edges={edges}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              defaultEdgeOptions={defaultEdgeOptions}
-              fitView
-              fitViewOptions={fitViewOptions}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-            >
-              <Controls />
-              <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-            </ReactFlow>
-            {/*  <AppHeader /> */}
-          </NodePaletteProvider>
+        <div style={{ minWidth: '83vw', height: `calc(100vh - ${toolbarHeight} - 4.3vh)` }} ref={reactFlowWrapper}>
+          <ReactFlow
+            onInit={setReactFlowInstance}
+            nodeTypes={nodeTypes}
+            nodes={nodes}
+            edges={edges}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            defaultEdgeOptions={defaultEdgeOptions}
+            fitView
+            fitViewOptions={fitViewOptions}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+          >
+            <Controls />
+            <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+          </ReactFlow>
         </div>
       </Grid>
     </Grid>
   );
 
-  return <BoardWrapper>{content}</BoardWrapper>;
+  return (
+    <NodePaletteProvider value={{ node_types: nodeTypes }}>
+      <BoardWrapper>
+        <ThemeProvider theme={boardTheme}>{content}</ThemeProvider>
+      </BoardWrapper>
+    </NodePaletteProvider>
+  );
 };

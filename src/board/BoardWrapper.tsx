@@ -16,6 +16,7 @@ import {
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { config } from '../config';
+import { NodePalette } from './NodePalette';
 
 const drawerWidth = config.theme.drawerWidth;
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
@@ -46,6 +47,7 @@ export const BoardWrapper = (props: Props) => {
         }}
       >
         <Toolbar />
+        <NodePalette />
         <Box sx={{ overflow: 'auto' }}>
           <List>
             {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
