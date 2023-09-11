@@ -1,4 +1,4 @@
-import { DialogueEntryNode, TDialogueEntryNode } from '../nodes/DialogueEntry';
+import { DialogueEntryNode, TDialogueEntryNode } from '../../nodes/DialogueEntry';
 
 export type TNodeType = TDialogueEntryNode;
 

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Card, Typography, List, ListItem } from '@mui/material';
 
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import NodePaletteContext from '../Providers';
+import { useAppSelector } from '../../stores/store';
 
 export const NodePalette = () => {
-  const nodeTypes = React.useContext(NodePaletteContext).node_types;
+  const nodeTypes = useAppSelector((state) => state.nodePaletteSlice.data);
 
   const onDragStart = (event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -18,7 +18,7 @@ export const NodePalette = () => {
   };
 
   return (
-    <Card sx={{ float: 'right', width: '100%', m: 1 }}>
+    <Card sx={{ width: '300px' }}>
       <Typography variant="h6" fontSize="md" sx={{ mb: 0.5 }}>
         Node Palette
       </Typography>

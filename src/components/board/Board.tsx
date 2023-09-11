@@ -18,13 +18,9 @@ import ReactFlow, {
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 
-export const NodePaletteContext = React.createContext({ node_types: {} });
 import { NODE_TYPES, TNodePaletteTypes } from './nodeTypes.const';
 
-import 'reactflow/dist/style.css';
 import { BoardWrapper } from './BoardWrapper';
-import { config } from '../config';
-import { NodePaletteProvider } from '../Providers';
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: 'TTqwqw1' } },
@@ -32,13 +28,13 @@ const initialNodes = [
 ];
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 
-const toolbarHeight = config.theme.toolbarHeight;
-
 const boardTheme = createTheme({
   palette: {
     mode: 'light',
   },
 });
+
+import 'reactflow/dist/style.css';
 
 export const Board = () => {
   const reactFlowWrapper = useRef<HTMLIFrameElement>(null);
@@ -112,7 +108,7 @@ export const Board = () => {
   const content = (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <div style={{ minWidth: '83vw', height: `calc(100vh - ${toolbarHeight} - 4.3vh)` }} ref={reactFlowWrapper}>
+        <div style={{ width: '100vw', height: '100vh' }} ref={reactFlowWrapper}>
           <ReactFlow
             onInit={setReactFlowInstance}
             nodeTypes={nodeTypes}
@@ -136,10 +132,8 @@ export const Board = () => {
   );
 
   return (
-    <NodePaletteProvider value={{ node_types: nodeTypes }}>
-      <BoardWrapper>
-        <ThemeProvider theme={boardTheme}>{content}</ThemeProvider>
-      </BoardWrapper>
-    </NodePaletteProvider>
+    <BoardWrapper>
+      <ThemeProvider theme={boardTheme}>{content}</ThemeProvider>
+    </BoardWrapper>
   );
 };

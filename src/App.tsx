@@ -1,5 +1,6 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Board } from './board/Board';
+import { Board } from './components/board/Board';
+import { NavBar } from './components/navigation/NavBar';
 
 const mainTheme = createTheme({
   palette: {
@@ -10,7 +11,8 @@ const mainTheme = createTheme({
 export default function App() {
   return (
     <ThemeProvider theme={mainTheme}>
-      <Board />;
+      <NavBar />
+      <Board />
     </ThemeProvider>
   );
 }
