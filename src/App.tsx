@@ -1,18 +1,28 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Board } from './components/board/Board';
 import { NavBar } from './components/navigation/NavBar';
+import { NodePaletteSideBar } from './components/board/NodePaletteSideBar';
 
-const mainTheme = createTheme({
+const darkTheme = createTheme({
   palette: {
     mode: 'dark',
   },
 });
 
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
+
 export default function App() {
   return (
-    <ThemeProvider theme={mainTheme}>
+    <ThemeProvider theme={darkTheme}>
       <NavBar />
-      <Board />
+      <NodePaletteSideBar />
+      <ThemeProvider theme={lightTheme}>
+        <Board />
+      </ThemeProvider>
     </ThemeProvider>
   );
 }

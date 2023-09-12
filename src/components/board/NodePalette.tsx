@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { Card, Typography, List, ListItem } from '@mui/material';
 
+import { NODE_TYPES } from '../../nodeTypes.const';
+
+// Icons
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { useAppSelector } from '../../stores/store';
 
 export const NodePalette = () => {
-  const nodeTypes = useAppSelector((state) => state.nodePaletteSlice.data);
+  const nodeTypes = NODE_TYPES;
 
   const onDragStart = (event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -18,8 +20,8 @@ export const NodePalette = () => {
   };
 
   return (
-    <Card sx={{ width: '300px' }}>
-      <Typography variant="h6" fontSize="md" sx={{ mb: 0.5 }}>
+    <Card sx={{ width: '300px', p: 2 }}>
+      <Typography variant="h6" fontSize="md" sx={{ mb: 1 }}>
         Node Palette
       </Typography>
       <List>
@@ -27,9 +29,9 @@ export const NodePalette = () => {
           console.log({ nodeType });
 
           return (
-            <ListItem key={nodeType} onDragStart={(event) => onDragStart(event, nodeType)} draggable>
+            <ListItem sx={{ pt: 1, pb: 1, pl: 0 }} key={nodeType} onDragStart={(event) => onDragStart(event, nodeType)} draggable>
               {/* <ListItemDecorator> */}
-              <DragIndicatorIcon />
+              <DragIndicatorIcon sx={{ mr: 2 }} />
               {/* </ListItemDecorator> */}
               {formatNodeType(nodeType)}
             </ListItem>

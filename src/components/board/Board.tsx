@@ -15,24 +15,15 @@ import ReactFlow, {
   BackgroundVariant,
   Controls,
 } from 'reactflow';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 
-import { NODE_TYPES, TNodePaletteTypes } from './nodeTypes.const';
-
-import { BoardWrapper } from './BoardWrapper';
+import { NODE_TYPES, TNodePaletteTypes } from '../../nodeTypes.const';
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: 'TTqwqw1' } },
   { id: '2', position: { x: 0, y: 100 }, data: { label: 'qwqw1' } },
 ];
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
-
-const boardTheme = createTheme({
-  palette: {
-    mode: 'light',
-  },
-});
 
 import 'reactflow/dist/style.css';
 
@@ -60,7 +51,6 @@ export const Board = () => {
   const onDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
-      console.log({ reactFlowWrapper });
 
       const reactFlowBounds = reactFlowWrapper!.current!.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
@@ -105,7 +95,7 @@ export const Board = () => {
 
   //const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
-  const content = (
+  return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <div style={{ width: '100vw', height: '100vh' }} ref={reactFlowWrapper}>
@@ -129,11 +119,5 @@ export const Board = () => {
         </div>
       </Grid>
     </Grid>
-  );
-
-  return (
-    <BoardWrapper>
-      <ThemeProvider theme={boardTheme}>{content}</ThemeProvider>
-    </BoardWrapper>
   );
 };

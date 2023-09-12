@@ -1,5 +1,6 @@
 import * as React from 'react';
-import Drawer from '@mui/material/Drawer';
+import { Drawer, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 type Props = {
   position: 'top' | 'left' | 'bottom' | 'right';
@@ -14,6 +15,9 @@ export const SideBar = (props: Props) => {
 
   return (
     <Drawer variant="persistent" hideBackdrop={false} anchor={position} open={isOpen} onClose={close}>
+      <IconButton onClick={close} sx={{ width: '20px', alignSelf: 'flex-end', mr: 2}}>
+        <CloseIcon />
+      </IconButton>
       {props.children}
     </Drawer>
   );
