@@ -72,7 +72,8 @@ export const NPC_Replic = (props: unknown) => {
           <PersonIcon />
         </IconButton>
       </Card>
-      <Handle type="source" position={Position.Bottom} id={`flow_${data.id}`} />
+      <Handle type="target" position={Position.Top} id={`flow_in_${data.id}`} />
+      <Handle type="source" position={Position.Bottom} id={`flow_out_${data.id}`} />
     </>
   );
 };

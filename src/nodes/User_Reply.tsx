@@ -1,6 +1,19 @@
 import { Handle, Position } from 'reactflow';
 import * as React from 'react';
-import { Card, IconButton, Dialog, DialogTitle, DialogContent, Box, DialogActions, Button, DialogContentText } from '@mui/material';
+import {
+  Card,
+  Grid,
+  Typography,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Box,
+  DialogActions,
+  Button,
+  DialogContentText,
+  Container,
+} from '@mui/material';
 import { NodeHeader } from './utils/NodeHeader';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -10,12 +23,14 @@ import NotesIcon from '@mui/icons-material/Notes';
 type TProps = {
   id: number;
   npc_name: string;
+  responses?: string[];
 };
 
 export const PlayerReply = (props: unknown) => {
   const data = props as TProps;
   // state for npc name
   const [isOpenTextEdit, setOpenTextEdit] = React.useState(false);
+  const [responses, setResponses] = React.useState(['Yes', 'No', 'ww', 'ww', 'ww']);
 
   const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     // value
@@ -59,19 +74,41 @@ export const PlayerReply = (props: unknown) => {
   return (
     <>
       {modal}
-      <Card sx={{ p: 1, minWidth: '140px' }}>
-        <NodeHeader id={data.id} nodeName="Player Reply" nodeDecorators={<AcUnitIcon />} />
-        <IconButton onClick={handleClickOpen}>
-          <NotesIcon />
-        </IconButton>
-        <IconButton onClick={copyNodeId}>
-          <ContentCopyIcon />
-        </IconButton>
-        <IconButton>
-          <PersonIcon />
-        </IconButton>
+      <Card sx={{ p: 1, minWidth: '200px' }}>
+        <Container>
+          <NodeHeader id={data.id} nodeName="Player Reply" nodeDecorators={<AcUnitIcon />} />
+          <IconButton onClick={handleClickOpen}>
+            <NotesIcon />
+          </IconButton>
+          <IconButton onClick={copyNodeId}>
+            <ContentCopyIcon />
+          </IconButton>
+          <IconButton>
+            <PersonIcon />
+          </IconButton>
+          <Box sx={{ height: '50px' }}></Box>
+        </Container>
+
+        {responses.length > 0 ? (
+          <Grid container sx={{ position: 'absolute', bottom: '-1px', width: '100%' }}>
+            {responses.map((response, index) => (
+              <Grid item xs key={`response_item_${index}_${data.id}`}>
+                <Handle
+                  style={{ position: 'relative', marginTop: '0.5rem' }}
+                  type="source"
+                  className="response-handle"
+                  position={Position.Bottom}
+                  id={`response_${index}_${data.id}`}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Handle type="source" position={Position.Bottom} id="response_1" />
+        )}
       </Card>
-      <Handle type="source" position={Position.Bottom} id={`flow_${data.id}`} />
+
+      <Handle type="target" position={Position.Top} id={`flow_in_${data.id}`} />
     </>
   );
 };
