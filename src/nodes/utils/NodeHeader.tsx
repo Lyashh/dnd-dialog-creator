@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 export type TNodeHeaderProps = {
   nodeName: string;
   id: number;
-  nodeDecorators: React.ReactNode;
+  //nodeDecorators: React.ReactNode;
 };
 
 export const NodeHeader = (props: TNodeHeaderProps) => {
@@ -14,7 +14,7 @@ export const NodeHeader = (props: TNodeHeaderProps) => {
         <Typography variant="body1">{props.nodeName}</Typography>
         {/* <Typography variant="caption">id: {props.id}</Typography> */}
       </Grid>
-      <Grid item>{props.nodeDecorators}</Grid>
+      {/* <Grid item>{props.nodeDecorators}</Grid> */}
     </Grid>
   );
 };

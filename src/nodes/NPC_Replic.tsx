@@ -61,7 +61,7 @@ export const NPC_Replic = (props: unknown) => {
     <>
       {modal}
       <Card sx={{ p: 1, minWidth: '140px' }}>
-        <NodeHeader id={data.id} nodeName="NPC Replic" nodeDecorators={<AcUnitIcon />} />
+        <NodeHeader id={data.id} nodeName="NPC Replic"  />
         <IconButton onClick={handleClickOpen}>
           <TextFieldsIcon />
         </IconButton>
