@@ -14,7 +14,7 @@ export const SideBar = (props: Props) => {
   const { position, close, isOpen } = props;
 
   return (
-    <Drawer variant="persistent" hideBackdrop={false} anchor={position} open={isOpen} onClose={close}>
+    <Drawer variant="persistent" hideBackdrop={false} anchor={position} open={isOpen} onClose={close} sx={{}}>
       <IconButton onClick={close} sx={{ width: '20px', alignSelf: 'flex-end', mr: 2}}>
         <CloseIcon />
       </IconButton>

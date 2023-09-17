@@ -14,7 +14,9 @@ import {
   DialogContentText,
   Container,
   TextField,
+  Typography,
 } from '@mui/material';
+import { useUpdateNodeInternals } from 'reactflow';
 import { NodeHeader } from './utils/NodeHeader';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import PersonIcon from '@mui/icons-material/Person';
@@ -31,9 +33,13 @@ type TProps = {
 
 type TPlayerResponse = {
   text: string;
+  id: number;
 };
 
-const defaultResponses: TPlayerResponse[] = [{ text: 'Response 1' }, { text: 'Response 2' }];
+const defaultResponses: TPlayerResponse[] = [
+  { text: 'Response 1', id: 0 },
+  { text: 'Response 2', id: 1 },
+];
 
 export const PlayerReply = (props: unknown) => {
   const data = props as TProps;
@@ -41,10 +47,11 @@ export const PlayerReply = (props: unknown) => {
   const [isOpenResponsesEdit, setOpenResponsesEdit] = React.useState(false);
   const [isOpenNodeColorEdit, setOpenNodeColorEdit] = React.useState(false);
   const [responses, setResponses] = React.useState<TPlayerResponse[]>(defaultResponses);
-  const [nodeColor, setNodeColor] = React.useState('#F9AB68');
+  const [nodeColor, setNodeColor] = React.useState('#9bbfb5'); //9bbfb5 F9AB68
+  const updateNodeInternals = useUpdateNodeInternals();
 
   const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    // value
+    // value`
     setNpcName(evt.target.value);
   };
 
@@ -56,21 +63,54 @@ export const PlayerReply = (props: unknown) => {
     navigator.clipboard.writeText(data.id.toString());
   };
 
+  const onResponseChange = (newValue: string, id: number) => {
+    /* const newResponses = responses.map((response) => {
+      if (response.id === id) {
+        return { ...response, text: newValue };
+      } else {
+        return response;
+      }
+    });
+    setResponses(newResponses);
+    updateNodeInternals(data.id.toString()); */
+  };
+
   const addNewResponse = () => {
-    setResponses([...responses, { text: '' }]);
+    setResponses([...responses, { text: '', id: responses.length }]);
+    updateNodeInternals(data.id.toString());
   };
 
   const responseEditModal = (
     <Dialog fullWidth={true} maxWidth={'lg'} open={isOpenResponsesEdit} onClose={() => setOpenResponsesEdit(false)}>
-      <DialogTitle>Responses:</DialogTitle>
+      <DialogTitle color="primary.main">Responses:</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          <TextField label="Outlined" variant="outlined" />
-          <TextField label="Outlined" variant="outlined" />
-        </DialogContentText>
-        <IconButton onClick={addNewResponse}>
-          <AddIcon />
-        </IconButton>
+        <Grid container spacing={3} mt={1}>
+          {responses.map((response, index) => {
+            return (
+              <Grid item xs={12} key={index}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
+                  <TextField
+                    multiline
+                    label={`${index + 1}.`}
+                    variant="outlined"
+                    fullWidth={true}
+                    value={response.text}
+                    onChange={(e) => {
+                      onResponseChange(e.target.value, response.id);
+                    }}
+                  />
+                </Box>
+              </Grid>
+            );
+          })}
+          <Grid item xs={12} mt={2}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
+              <Button variant="outlined" onClick={addNewResponse} startIcon={<AddIcon />}>
+                Add
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setOpenResponsesEdit(false)}>Close</Button>
