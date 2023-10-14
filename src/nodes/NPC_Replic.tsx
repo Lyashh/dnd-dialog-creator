@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Card, IconButton, Dialog, DialogTitle, DialogContent, Box, DialogActions, Button, DialogContentText } from '@mui/material';
 import { NodeHeader } from './utils/NodeHeader';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
-import AcUnitIcon from '@mui/icons-material/AcUnit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import PersonIcon from '@mui/icons-material/Person';
 
@@ -61,7 +60,7 @@ export const NPC_Replic = (props: unknown) => {
     <>
       {modal}
       <Card sx={{ p: 1, minWidth: '140px' }}>
-        <NodeHeader id={data.id} nodeName="NPC Replic"  />
+        <NodeHeader id={data.id} nodeType="NPC Replic"  />
         <IconButton onClick={handleClickOpen}>
           <TextFieldsIcon />
         </IconButton>

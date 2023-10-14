@@ -1,5 +1,5 @@
 import { NPC_Replic, TNPC_Replic } from './nodes/NPC_Replic';
-import { PlayerReply, TPlayerReply } from './nodes/User_Reply';
+import { PlayerReply, TPlayerReply } from './nodes/PlayerReply';
 
 export type TNodeType = TNPC_Replic | TPlayerReply;
 
